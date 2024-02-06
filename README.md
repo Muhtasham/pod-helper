@@ -1,4 +1,21 @@
-# Whisper
+# 🎧 Pod-Helper
+
+Pod-Helper is an advanced audio processing tool that goes beyond transcribing at lightning speed. It also offers audio repair capabilities using the MLM (Masked Language Model) objective to ensure your content maintains its quality and vibe.
+
+## Features:
+- Lightning-fast audio transcription.
+- Audio corruption repair using state-of-the-art MLM technology.
+- Ensures your content's vibe is just right.
+
+## Gen AI on RTX PCs Developer Contest Entry:
+
+**System Info:**
+- GPU name: NVIDIA RTX A1000
+- Operating System: Windows 10
+- tensorrt-llm version: 0.7.1
+
+
+## Whisper
 
 This document shows how to build and run a [whisper model](https://github.com/openai/whisper/tree/main) in TensorRT-LLM on a single GPU.
 
