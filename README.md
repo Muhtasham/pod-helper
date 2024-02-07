@@ -9,41 +9,44 @@ Pod-Helper is an advanced audio processing tool that goes beyond transcribing at
 - Audio corruption repair.
 - Ensures your content's vibe is just right.
 
-## [Gen AI on RTX PCs Developer Contest Entry](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest/s):
+## How to use:
 
-General Generative AI Projects category
+### Prerequisites
 
-**System Info:**
-- GPU name: NVIDIA RTX A1000
-- Operating System: Windows 10
-- tensorrt-llm version: 0.7.1
+- Install TensorRT-LLM for Windows from [tensorrt-llm-windows](https://github.com/NVIDIA/TensorRT-LLM/tree/rel/windows).
 
-## Whisper
+### Overview
 
-This document shows how to build and run a [whisper model](https://github.com/openai/whisper/tree/main) in TensorRT-LLM on a single GPU.
+Pod-Helper utilizes the TensorRT-LLM Whisper example code, primarily from [`examples/whisper`](https://github.com/NVIDIA/TensorRT-LLM/tree/rel/examples/whisper). 
 
-## Prerequisites
+Key components include:
+- [`run.py`](./run.py): Performs inference on WAV file(s) using the built TensorRT engines.
+- [`app.py`](./app.py): Provides a Gradio interface for microphone input or file upload, utilizing `run.py` modules.
 
-Install TensorRT-LLM via [`tensorrt-llm-windows`](https://github.com/NVIDIA/TensorRT-LLM/tree/rel/windows)
+### Usage
 
-## Overview
+Here we show to run main model behind this app [whisper model](https://github.com/openai/whisper/tree/main) in TensorRT-LLM on a single GPU.
 
-The TensorRT-LLM Whisper example code from [`examples/whisper`](https://github.com/NVIDIA/TensorRT-LLM/tree/rel/examples/whisper). There are three main files in that folder:
+### Run
 
- * [`build.py`](./build.py) to build the [TensorRT](https://developer.nvidia.com/tensorrt) engine(s) needed to run the Whisper model.
- * [`run.py`](./run.py) to run the inference on a single wav file.
+```bash
+# If the input file does not have a .wav extension, ffmpeg needs to be installed with the following command:
+# apt-get update && apt-get install -y ffmpeg
+python3 run.py --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
 
-## Support Matrix
-  * FP16
+# decode a custom audio file and different engine
+python3 run.py --name single_wav_test --engine_dir ./tinyrt_no_layernorm --input_file assets/thnx_resampled_16000Hz.wav
 
-## Usage
+# without logger
+python3 run.py --log_level none --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
 
-The TensorRT-LLM Whisper example code locates at [examples/whisper](https://github.com/NVIDIA/TensorRT-LLM/tree/rel/examples/whisper)). It takes whisper pytorch weights as input, and builds the corresponding TensorRT engines.
+# Launch the Gradio interface
+python3 app.py
+```
 
-### Build TensorRT engine(s)
+### Optional: Re-Build TensorRT engine(s)
 
-Need to prepare the whisper checkpoint first by downloading models from [here](https://github.com/openai/whisper/blob/main/whisper/__init__.py#L27-L28).
-
+You can either use the pre-converted models located in the `tinyrt` folder or download the Whisper checkpoint models from [here](https://github.com/openai/whisper/blob/main/whisper/__init__.py#L27-L28).
 
 ```bash
 wget --directory-prefix=assets https://raw.githubusercontent.com/openai/whisper/main/whisper/assets/multilingual.tiktoken
@@ -53,7 +56,7 @@ wget --directory-prefix=assets https://raw.githubusercontent.com/yuekaizhang/Tri
 wget --directory-prefix=assets https://openaipublic.azureedge.net/main/whisper/models/65147644a518d12f04e32d6f3b26facc3f8dd46e5390956a9424a650c0ce22b9/tiny.pt
 ```
 
-TensorRT-LLM Whisper builds TensorRT engine(s) from the pytorch checkpoint.
+TensorRT-LLM Whisper builds TensorRT engine(s) from the pytorch checkpoint, and saves the engine(s) to the specified directory. Skip this step if you are using the pre-converted models.
 
 ```bash
 # install requirements first
@@ -69,21 +72,18 @@ python3 build.py --output_dir tinyrt_no_layernorm --use_gpt_attention_plugin --u
 python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --use_gemm_plugin --use_bert_attention_plugin --use_weight_only
 ```
 
-### Run
+## [Gen AI on RTX PCs Developer Contest Entry](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest/s):
 
-```bash
-# decode a single audio file
-# If the input file does not have a .wav extension, ffmpeg needs to be installed with the following command:
-# apt-get update && apt-get install -y ffmpeg
-python3 run.py --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
+General Generative AI Projects category
 
-# decode a custom audio file and different engine
-python3 run.py --name single_wav_test --engine_dir ./tinyrt_no_layernorm --input_file assets/thnx_resampled_16000Hz.wav
-
-# without logger
-python3 run.py --log_level none --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
-```
-
-### Acknowledgment
-
-This implementation of TensorRT-LLM for Whisper has been adapted from official examples which in turn have been adapted from the [NVIDIA TensorRT-LLM Hackathon 2023](https://github.com/NVIDIA/trt-samples-for-hackathon-cn/tree/master/Hackathon2023) submission of Jinheng Wang, which can be found in the repository [Eddie-Wang-Hackathon2023](https://github.com/Eddie-Wang1120/Eddie-Wang-Hackathon2023) on GitHub. We extend our gratitude to Jinheng for providing a foundation for the implementation.
+**Tested on following system:**
+- Operating System: Windows 10
+  - Version: 22H2 
+  - OS Build: 19045.3930
+- TensorRT-LLM version: 0.7.1
+  - CUDA version: 12.4
+  - cuDNN version: 8.9.7.29 
+  - GPU: NVIDIA RTX A1000
+  - Driver version: 551.23
+  - DataType: FP16
+  - Python version: 3.10.11
