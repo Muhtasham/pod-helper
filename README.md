@@ -46,7 +46,7 @@ python3 app.py
 
 ### Optional: Re-Build TensorRT engine(s)
 
-You can either use the pre-converted models located in the `tinyrt` folder or download the Whisper checkpoint models from [here](https://github.com/openai/whisper/blob/main/whisper/__init__.py#L27-L28).
+You can either use the pre-converted models located in the [`tinyrt`](https://github.com/Muhtasham/pod-helper/tree/master/tinyrt) folder or download the Whisper checkpoint models from [here](https://github.com/openai/whisper/blob/main/whisper/__init__.py#L27-L28).
 
 ```bash
 wget --directory-prefix=assets https://raw.githubusercontent.com/openai/whisper/main/whisper/assets/multilingual.tiktoken
