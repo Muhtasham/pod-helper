@@ -72,7 +72,7 @@ python3 build.py --output_dir tinyrt_no_layernorm --use_gpt_attention_plugin --u
 python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --use_gemm_plugin --use_bert_attention_plugin --use_weight_only
 ```
 
-## [Gen AI on RTX PCs Developer Contest Entry](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest/s):
+#### [Gen AI on RTX PCs Developer Contest Entry details](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest/s):
 
 General Generative AI Projects category
 
