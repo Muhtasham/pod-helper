@@ -28,6 +28,3 @@ tensorrt_llm/bindings/*.pyi
 results_trt/
 dist/*
 examples/whisper
-assets/
-tinyrt/
-tinyrt_no_layernorm/
