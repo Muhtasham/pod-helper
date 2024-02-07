@@ -5,9 +5,9 @@
 Pod-Helper is an advanced audio processing tool that goes beyond transcribing at lightning speed. It also offers audio repair capabilities using the MLM (Masked Language Model) objective to ensure your content maintains its quality and vibe.
 
 ## Features:
-- Lightning-fast audio transcription.
-- Audio corruption repair.
-- Ensures your content's vibe is just right.
+- ⚡ Lightning-fast audio transcription.
+- 🛠️ Audio corruption repair.
+- ✨ Ensures your content's vibe is just right.
 
 ## How to use:
 
@@ -72,7 +72,8 @@ python3 build.py --output_dir tinyrt_no_layernorm --use_gpt_attention_plugin --u
 python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --use_gemm_plugin --use_bert_attention_plugin --use_weight_only
 ```
 
-#### [Gen AI on RTX PCs Developer Contest Entry details](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest/s):
+<details>
+<summary>Gen AI on RTX PCs Developer Contest Entry details (click to toggle)</summary>
 
 Category: General Generative AI Projects category
 
@@ -87,3 +88,5 @@ Category: General Generative AI Projects category
   - Driver version: 551.23
   - DataType: FP16
   - Python version: 3.10.11
+
+</details>
