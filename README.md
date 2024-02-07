@@ -6,16 +6,17 @@ Pod-Helper is an advanced audio processing tool that goes beyond transcribing at
 
 ## Features:
 - Lightning-fast audio transcription.
-- Audio corruption repair using state-of-the-art MLM technology.
+- Audio corruption repair.
 - Ensures your content's vibe is just right.
 
-## Gen AI on RTX PCs Developer Contest Entry:
+## [Gen AI on RTX PCs Developer Contest Entry](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest/s):
+
+General Generative AI Projects category
 
 **System Info:**
 - GPU name: NVIDIA RTX A1000
 - Operating System: Windows 10
 - tensorrt-llm version: 0.7.1
-
 
 ## Whisper
 
@@ -78,6 +79,9 @@ python3 run.py --name single_wav_test --engine_dir ./tinyrt --input_file assets/
 
 # decode a custom audio file and different engine
 python3 run.py --name single_wav_test --engine_dir ./tinyrt_no_layernorm --input_file assets/thnx_resampled_16000Hz.wav
+
+# without logger
+python3 run.py --log_level none --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
 ```
 
 ### Acknowledgment

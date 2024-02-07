@@ -73,8 +73,8 @@ def load_audio(file: str, sr: int = SAMPLE_RATE):
 
 def load_audio_wav_format(wav_path, debug=False):
     # Ensure the audio file is in .wav format
-    assert wav_path.endswith('.wav'), f"Only support .wav format, but got {wav_path}"
-    
+    assert wav_path.endswith(".wav"), f"Only support .wav format, but got {wav_path}"
+
     # Read the audio file
     waveform, sample_rate = soundfile.read(wav_path)
 
@@ -83,19 +83,23 @@ def load_audio_wav_format(wav_path, debug=False):
         print(f"Resampling audio from {sample_rate} Hz to {SAMPLE_RATE} Hz")
         # calculate the time for resampling
         now = time.time()
-        waveform = librosa.resample(waveform.T, orig_sr=sample_rate, target_sr=SAMPLE_RATE)
+        waveform = librosa.resample(
+            waveform.T, orig_sr=sample_rate, target_sr=SAMPLE_RATE
+        )
         end = time.time()
         print(f"Resampling took {end - now:.2f} seconds")
         sample_rate = SAMPLE_RATE
 
         # save the resampled audio to a new file
-        resampled_wav_path = wav_path.replace('.wav', f'_resampled_{SAMPLE_RATE}Hz.wav')
+        resampled_wav_path = wav_path.replace(".wav", f"_resampled_{SAMPLE_RATE}Hz.wav")
         soundfile.write(resampled_wav_path, waveform.T, sample_rate)
         print(f"Resampled audio saved to {resampled_wav_path}")
 
     # Ensure the sample rate is 16000 Hz
-    assert sample_rate == SAMPLE_RATE, f"Only support 16k sample rate, but got {sample_rate}"
-    
+    assert (
+        sample_rate == SAMPLE_RATE
+    ), f"Only support 16k sample rate, but got {sample_rate}"
+
     # Identify if the audio is mono or stereo
     channels = "Mono" if waveform.ndim == 1 else "Stereo"
 
@@ -103,7 +107,7 @@ def load_audio_wav_format(wav_path, debug=False):
         print("Stereo audio detected. Converting to mono.")
         # Convert stereo to mono by averaging the channels
         waveform = waveform.mean(axis=1)
-    
+
     if debug:
         # Print additional information about the audio file
         print(f"Loaded WAV file: {wav_path}")
@@ -120,15 +124,14 @@ def pad_or_trim(array, length: int = N_SAMPLES, *, axis: int = -1):
     """
     if torch.is_tensor(array):
         if array.shape[axis] > length:
-            array = array.index_select(dim=axis,
-                                       index=torch.arange(length,
-                                                          device=array.device))
+            array = array.index_select(
+                dim=axis, index=torch.arange(length, device=array.device)
+            )
 
         if array.shape[axis] < length:
             pad_widths = [(0, 0)] * array.ndim
             pad_widths[axis] = (0, length - array.shape[axis])
-            array = F.pad(array,
-                          [pad for sizes in pad_widths[::-1] for pad in sizes])
+            array = F.pad(array, [pad for sizes in pad_widths[::-1] for pad in sizes])
     else:
         if array.shape[axis] > length:
             array = array.take(indices=range(length), axis=axis)
@@ -142,9 +145,7 @@ def pad_or_trim(array, length: int = N_SAMPLES, *, axis: int = -1):
 
 
 @lru_cache(maxsize=None)
-def mel_filters(device,
-                n_mels: int,
-                mel_filters_dir: str = None) -> torch.Tensor:
+def mel_filters(device, n_mels: int, mel_filters_dir: str = None) -> torch.Tensor:
     """
     load the mel filterbank matrix for projecting STFT into a Mel spectrogram.
     Allows decoupling librosa dependency; saved using:
@@ -156,8 +157,9 @@ def mel_filters(device,
     """
     assert n_mels in {80, 128}, f"Unsupported n_mels: {n_mels}"
     if mel_filters_dir is None:
-        mel_filters_path = os.path.join(os.path.dirname(__file__), "assets",
-                                        "mel_filters.npz")
+        mel_filters_path = os.path.join(
+            os.path.dirname(__file__), "assets", "mel_filters.npz"
+        )
     else:
         mel_filters_path = os.path.join(mel_filters_dir, "mel_filters.npz")
     with np.load(mel_filters_path) as f:
@@ -197,12 +199,11 @@ def log_mel_spectrogram(
 
     if not torch.is_tensor(audio):
         if isinstance(audio, str):
-            if audio.endswith('.wav'):
+            if audio.endswith(".wav"):
                 audio, _ = load_audio_wav_format(audio)
             else:
                 audio = load_audio(audio)
-        assert isinstance(audio,
-                          np.ndarray), f"Unsupported audio type: {type(audio)}"
+        assert isinstance(audio, np.ndarray), f"Unsupported audio type: {type(audio)}"
         duration = audio.shape[-1] / SAMPLE_RATE
         audio = pad_or_trim(audio, N_SAMPLES)
         audio = audio.astype(np.float32)
@@ -213,12 +214,8 @@ def log_mel_spectrogram(
     if padding > 0:
         audio = F.pad(audio, (0, padding))
     window = torch.hann_window(N_FFT).to(audio.device)
-    stft = torch.stft(audio,
-                      N_FFT,
-                      HOP_LENGTH,
-                      window=window,
-                      return_complex=True)
-    magnitudes = stft[..., :-1].abs()**2
+    stft = torch.stft(audio, N_FFT, HOP_LENGTH, window=window, return_complex=True)
+    magnitudes = stft[..., :-1].abs() ** 2
 
     filters = mel_filters(audio.device, n_mels, mel_filters_dir)
     mel_spec = filters @ magnitudes
@@ -232,8 +229,9 @@ def log_mel_spectrogram(
         return log_spec
 
 
-def store_transcripts(filename: Pathlike, texts: Iterable[Tuple[str, str,
-                                                                str]]) -> None:
+def store_transcripts(
+    filename: Pathlike, texts: Iterable[Tuple[str, str, str]]
+) -> None:
     """Save predicted results and reference transcripts to a file.
     https://github.com/k2-fsa/icefall/blob/master/icefall/utils.py
     Args:
@@ -324,9 +322,11 @@ def write_error_stats(
     tot_err_rate = "%.2f" % (100.0 * tot_errs / ref_len)
 
     if enable_log:
-        logging.info(f"[{test_set_name}] %WER {tot_errs / ref_len:.2%} "
-                     f"[{tot_errs} / {ref_len}, {ins_errs} ins, "
-                     f"{del_errs} del, {sub_errs} sub ]")
+        logging.info(
+            f"[{test_set_name}] %WER {tot_errs / ref_len:.2%} "
+            f"[{tot_errs} / {ref_len}, {ins_errs} ins, "
+            f"{del_errs} del, {sub_errs} sub ]"
+        )
 
     print(f"%WER = {tot_err_rate}", file=f)
     print(
@@ -353,28 +353,37 @@ def write_error_stats(
                     ali[i + 1][0] = ali[i][0] + ali[i + 1][0]
                     ali[i + 1][1] = ali[i][1] + ali[i + 1][1]
                     ali[i] = [[], []]
-            ali = [[
-                list(filter(lambda a: a != ERR, x)),
-                list(filter(lambda a: a != ERR, y)),
-            ] for x, y in ali]
+            ali = [
+                [
+                    list(filter(lambda a: a != ERR, x)),
+                    list(filter(lambda a: a != ERR, y)),
+                ]
+                for x, y in ali
+            ]
             ali = list(filter(lambda x: x != [[], []], ali))
-            ali = [[
-                ERR if x == [] else " ".join(x),
-                ERR if y == [] else " ".join(y),
-            ] for x, y in ali]
+            ali = [
+                [
+                    ERR if x == [] else " ".join(x),
+                    ERR if y == [] else " ".join(y),
+                ]
+                for x, y in ali
+            ]
 
         print(
-            f"{cut_id}:\t" + " ".join((ref_word if ref_word == hyp_word else
-                                       f"({ref_word}->{hyp_word})"
-                                       for ref_word, hyp_word in ali)),
+            f"{cut_id}:\t"
+            + " ".join(
+                (
+                    ref_word if ref_word == hyp_word else f"({ref_word}->{hyp_word})"
+                    for ref_word, hyp_word in ali
+                )
+            ),
             file=f,
         )
 
     print("", file=f)
     print("SUBSTITUTIONS: count ref -> hyp", file=f)
 
-    for count, (ref, hyp) in sorted([(v, k) for k, v in subs.items()],
-                                    reverse=True):
+    for count, (ref, hyp) in sorted([(v, k) for k, v in subs.items()], reverse=True):
         print(f"{count}   {ref} -> {hyp}", file=f)
 
     print("", file=f)
@@ -388,11 +397,10 @@ def write_error_stats(
         print(f"{count}   {hyp}", file=f)
 
     print("", file=f)
-    print("PER-WORD STATS: word  corr tot_errs count_in_ref count_in_hyp",
-          file=f)
-    for _, word, counts in sorted([(sum(v[1:]), k, v)
-                                   for k, v in words.items()],
-                                  reverse=True):
+    print("PER-WORD STATS: word  corr tot_errs count_in_ref count_in_hyp", file=f)
+    for _, word, counts in sorted(
+        [(sum(v[1:]), k, v) for k, v in words.items()], reverse=True
+    ):
         (corr, ref_sub, hyp_sub, ins, dels) = counts
         tot_errs = ref_sub + hyp_sub + ins + dels
         ref_count = corr + ref_sub + dels
