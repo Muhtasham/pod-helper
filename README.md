@@ -73,9 +73,9 @@ python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --us
 ```
 
 <details>
-<summary>Gen AI on RTX PCs Developer Contest Entry details (click to toggle)</summary>
+<summary>Gen AI on RTX PCs Developer Contest Entry details</summary>
 
-Category: General Generative AI Projects category
+Category: [General Generative AI Projects category](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest)
 
 **Tested on following system:**
 - Operating System: Windows 10
