@@ -24,7 +24,7 @@ from datasets import load_dataset
 from tokenizer import get_tokenizer
 from torch.utils.data import DataLoader
 from whisper.normalizers import EnglishTextNormalizer
-from whisper_utils import log_mel_spectrogram, store_transcripts, write_error_stats
+from whisper_utils import log_mel_spectrogram, store_transcripts
 
 import tensorrt_llm
 import tensorrt_llm.logger as logger
