@@ -39,7 +39,7 @@ from rich.panel import Panel
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--log_level', type=str, default='verbose')
+    parser.add_argument('--log_level', type=str, default='none')
     parser.add_argument('--engine_dir', type=str, default='tinyrt')
     parser.add_argument('--results_dir', type=str, default='tmp')
     parser.add_argument('--assets_dir', type=str, default=None)
@@ -406,12 +406,3 @@ if __name__ == '__main__':
     Path(args.results_dir).mkdir(parents=True, exist_ok=True)
     store_transcripts(filename=f"{args.results_dir}/recogs-{args.name}.txt",
                       texts=results)
-
-    with open(f"{args.results_dir}/errs-{args.name}.txt", "w") as f:
-        total_error_rate = write_error_stats(f,
-                                             "test-set",
-                                             results,
-                                             enable_log=True)
-        if args.dataset == "hf-internal-testing/librispeech_asr_dummy":
-            #assert total_error_rate <= 3.1, f"Word Error rate using whisper large model should be less than 3.1% but got {total_error_rate}"        
-            pass

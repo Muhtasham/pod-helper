@@ -50,8 +50,6 @@ wget --directory-prefix=assets assets/mel_filters.npz https://raw.githubusercont
 wget --directory-prefix=assets https://raw.githubusercontent.com/yuekaizhang/Triton-ASR-Client/main/datasets/mini_en/wav/1221-135766-0002.wav
 # tiny model
 wget --directory-prefix=assets https://openaipublic.azureedge.net/main/whisper/models/65147644a518d12f04e32d6f3b26facc3f8dd46e5390956a9424a650c0ce22b9/tiny.pt
-# large
-curl -o assets/large-v3.pt https://openaipublic.azureedge.net/main/whisper/models/e5b1a55b89c1367dacf97e3e19bfd829a01529dbfdeefa8caeb59b3f1b81dadb/large-v3.pt
 ```
 
 TensorRT-LLM Whisper builds TensorRT engine(s) from the pytorch checkpoint.
@@ -68,19 +66,15 @@ python3 build.py --output_dir tinyrt_no_layernorm --use_gpt_attention_plugin --u
 
 # Build the tiny model using a single GPU with quantization
 python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --use_gemm_plugin --use_bert_attention_plugin --use_weight_only
-
-# Build the large model using a single GPU with plugins without layernorm
-python3 build.py --output_dir large-v3 --use_gpt_attention_plugin --use_gemm_plugin  --use_bert_attention_plugin
 ```
 
 ### Run
 
 ```bash
-output_dir=./tinyrt
 # decode a single audio file
 # If the input file does not have a .wav extension, ffmpeg needs to be installed with the following command:
 # apt-get update && apt-get install -y ffmpeg
-python3 run.py --name single_wav_test --engine_dir $output_dir --input_file assets/1221-135766-0002.wav
+python3 run.py --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
 
 # decode a custom audio file and different engine
 python3 run.py --name single_wav_test --engine_dir ./tinyrt_no_layernorm --input_file assets/thnx_resampled_16000Hz.wav
