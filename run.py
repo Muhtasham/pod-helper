@@ -249,8 +249,6 @@ def decode_wav_file(
     mel_filters_dir=None,
     return_duration_info=True,
 ):
-    logger.info(f"input_file_path: {input_file_path}")
-
     start_time = time.time()
 
     mel, total_duration = log_mel_spectrogram(
@@ -302,9 +300,8 @@ def decode_wav_file(
     # Print the table
     rprint(table)
 
-    del model
-
     if return_duration_info:
+        del model
         return results, total_duration
     else:
         return prediction

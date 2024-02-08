@@ -17,6 +17,42 @@ sentiment = pipeline(
 )
 
 
+def transcribe_live(stream, new_chunk):
+    if new_chunk is None:
+        raise gr.Error(
+            "No audio file submitted! Please upload or record an audio file before submitting your request."
+        )
+
+    chunk_text = decode_wav_file(
+        new_chunk, return_duration_info=False,
+    )
+
+    print(f"Original Text: {chunk_text}")  # print the original transcribed text
+
+    # Masking the text if not already masked
+    if "<mask>" in chunk_text:
+        print("Found '<mask>' in text.")
+        unmasked_text = fill_mask(chunk_text)[0]["sequence"]
+        print(f"Unmasked Text: {unmasked_text}")  # print the text after unmasking
+    elif "mask" in chunk_text:
+        print("'mask' found in text, replacing with '<mask>' for processing.")
+        replaced_text = chunk_text.replace("mask", "<mask>")
+        unmasked_text = fill_mask(replaced_text)[0]["sequence"]
+        print(
+            f"Text after replacing 'mask' with '<mask>' and unmasking: {unmasked_text}"
+        )
+    else:
+        unmasked_text = chunk_text
+        print("No 'mask' or '<mask>' found in text.")
+
+    if stream is not None:
+        stream += unmasked_text
+    else:
+        stream = unmasked_text
+
+    return stream, unmasked_text
+
+
 def transcribe(inputs):
     if inputs is None:
         raise gr.Error(
@@ -88,6 +124,20 @@ if __name__ == "__main__":
         allow_flagging="never",
     )
 
+    # live transcrption
+    live_transcribe = gr.Interface(
+        fn=transcribe_live,
+        inputs=[
+            "state",
+            gr.Audio(sources="microphone", streaming=True),
+        ],
+        outputs=["state", gr.Textbox(label="Transcription")],
+        live=True,
+        title="Pod-Helper Transcription Service",
+        description=("Streaming ASR Demo. Demo uses the OpenAI Whisper"),
+        allow_flagging="never",
+    )
+
     file_transcribe = gr.Interface(
         fn=transcribe,
         inputs=[
@@ -106,7 +156,8 @@ if __name__ == "__main__":
 
     with demo:
         gr.TabbedInterface(
-            [mf_transcribe, file_transcribe], ["Microphone", "Audio file"]
+            [mf_transcribe, live_transcribe, file_transcribe],
+            ["Microphone", "Microphone Streaming", "Audio File upload"],
         )
 
     demo.launch()

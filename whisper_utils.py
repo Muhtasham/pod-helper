@@ -27,6 +27,7 @@ import torch
 import torch.nn.functional as F
 import librosa
 import time
+import ffmpeg
 
 Pathlike = Union[str, Path]
 
@@ -78,14 +79,20 @@ def load_audio_wav_format(wav_path, debug=False):
     # Read the audio file
     waveform, sample_rate = soundfile.read(wav_path)
 
+    # Identify if the audio is mono or stereo
+    channels = "Mono" if waveform.ndim == 1 else "Stereo"
+
     # If the sample rate is not 16000 Hz, resample it to 16000 Hz
     if sample_rate != SAMPLE_RATE:
         print(f"Resampling audio from {sample_rate} Hz to {SAMPLE_RATE} Hz")
         # calculate the time for resampling
         now = time.time()
-        waveform = librosa.resample(
-            waveform.T, orig_sr=sample_rate, target_sr=SAMPLE_RATE
-        )
+        if channels == "Stereo":
+            waveform = librosa.resample(
+                waveform.T, orig_sr=sample_rate, target_sr=SAMPLE_RATE
+            )
+        else:
+            waveform = librosa.resample(waveform, orig_sr=sample_rate, target_sr=SAMPLE_RATE)
         end = time.time()
         print(f"Resampling took {end - now:.2f} seconds")
         sample_rate = SAMPLE_RATE
@@ -100,8 +107,6 @@ def load_audio_wav_format(wav_path, debug=False):
         sample_rate == SAMPLE_RATE
     ), f"Only support 16k sample rate, but got {sample_rate}"
 
-    # Identify if the audio is mono or stereo
-    channels = "Mono" if waveform.ndim == 1 else "Stereo"
 
     if waveform.ndim == 2:
         print("Stereo audio detected. Converting to mono.")
@@ -167,7 +172,7 @@ def mel_filters(device, n_mels: int, mel_filters_dir: str = None) -> torch.Tenso
 
 
 def log_mel_spectrogram(
-    audio: Union[str, np.ndarray, torch.Tensor],
+    audio: Union[str, np.ndarray, torch.Tensor, Tuple[int, np.ndarray]],
     n_mels: int,
     padding: int = 0,
     device: Optional[Union[str, torch.device]] = None,
@@ -179,8 +184,10 @@ def log_mel_spectrogram(
 
     Parameters
     ----------
-    audio: Union[str, np.ndarray, torch.Tensor], shape = (*)
-        The path to audio or either a NumPy array or Tensor containing the audio waveform in 16 kHz
+    audio: Union[str, np.ndarray, torch.Tensor, Tuple[int, np.ndarray]]
+        The audio input can be a path to an audio file (str), a NumPy array containing
+        the audio waveform, a PyTorch tensor, or a tuple containing the sampling rate
+        (int) and the audio waveform (np.ndarray).
 
     n_mels: int
         The number of Mel-frequency filters, only 80 and 128 are supported
@@ -196,6 +203,22 @@ def log_mel_spectrogram(
     torch.Tensor, shape = (80 or 128, n_frames)
         A Tensor that contains the Mel spectrogram
     """
+
+    if isinstance(audio, tuple):
+        # Unpack the tuple to get the sampling rate and audio data
+        sr, audio = audio
+        audio = audio.astype(np.float32)
+        audio /= np.max(np.abs(audio))
+
+        print(f"Live audio sample rate: {sr} Hz")
+        if sr != SAMPLE_RATE:
+            # Resample the audio to 16 kHz if the sampling rate is not 16 kHz
+            audio = librosa.resample(
+                audio, orig_sr=sr, target_sr=SAMPLE_RATE
+            )
+            print(f"Resampled audio to {SAMPLE_RATE} Hz")
+    else:
+        audio = audio
 
     if not torch.is_tensor(audio):
         if isinstance(audio, str):

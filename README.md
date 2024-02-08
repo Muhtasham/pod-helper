@@ -9,6 +9,25 @@ Pod-Helper is an advanced audio processing tool that goes beyond transcribing at
 - 🛠️ Audio corruption repair.
 - ✨ Ensures your content's vibe is just right.
 
+## Gen AI on RTX PCs Developer Contest Entry details:
+
+This project is a submission for the NVIDIA RTX PCs Developer Contest, under the General Generative AI Projects category. Pod-Helper showcases the potential of generative AI in transforming audio content creation and processing.
+
+Category: [General Generative AI Projects category](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest)
+
+**Tested on following system:**
+- Operating System: Windows 10
+  - Version: 22H2 
+  - OS Build: 19045.3930
+- TensorRT-LLM version: 0.7.1
+  - CUDA version: 12.4
+  - cuDNN version: 8.9.7.29 
+  - GPU: NVIDIA RTX A1000
+  - Driver version: 551.23
+  - DataType: FP16
+  - Python version: 3.10.11
+  - PyTorch version: 2.1.0+cu121
+
 ## How to use:
 
 ### Prerequisites
@@ -72,21 +91,7 @@ python3 build.py --output_dir tinyrt_no_layernorm --use_gpt_attention_plugin --u
 python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --use_gemm_plugin --use_bert_attention_plugin --use_weight_only
 ```
 
-<details>
-<summary>Gen AI on RTX PCs Developer Contest Entry details</summary>
-
-Category: [General Generative AI Projects category](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest)
-
-**Tested on following system:**
-- Operating System: Windows 10
-  - Version: 22H2 
-  - OS Build: 19045.3930
-- TensorRT-LLM version: 0.7.1
-  - CUDA version: 12.4
-  - cuDNN version: 8.9.7.29 
-  - GPU: NVIDIA RTX A1000
-  - Driver version: 551.23
-  - DataType: FP16
-  - Python version: 3.10.11
-
-</details>
+## ToDos:
+- [ ] Port BERT model for MLM and Sentiment Analysis to TensorRT-LLM.
+- [ ] Add support for more audio formats.
+- [ ] Add support for more languages. 
