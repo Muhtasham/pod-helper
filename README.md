@@ -4,7 +4,7 @@
 
 UPD added support for real-time ASR
 
-![](assets/real-time.png)
+![](assets/real-time.gif)
 
 Pod-Helper is an advanced audio processing tool that goes beyond transcribing at lightning speed. It also offers audio repair capabilities using the MLM (Masked Language Model) objective to ensure your content maintains its quality and vibe.
 
