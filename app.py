@@ -1,6 +1,7 @@
 import gradio as gr
 import tensorrt_llm
 import torch
+import numpy as np
 from run import decode_wav_file
 from transformers import pipeline
 
@@ -23,34 +24,17 @@ def transcribe_live(stream, new_chunk):
             "No audio file submitted! Please upload or record an audio file before submitting your request."
         )
 
+    if stream is not None:
+        stream = np.concatenate([stream, chunk_text])
+    else:
+        stream = chunk_text
+
     chunk_text = decode_wav_file(
-        new_chunk, return_duration_info=False,
+        stream,
+        return_duration_info=False,
     )
 
-    print(f"Original Text: {chunk_text}")  # print the original transcribed text
-
-    # Masking the text if not already masked
-    if "<mask>" in chunk_text:
-        print("Found '<mask>' in text.")
-        unmasked_text = fill_mask(chunk_text)[0]["sequence"]
-        print(f"Unmasked Text: {unmasked_text}")  # print the text after unmasking
-    elif "mask" in chunk_text:
-        print("'mask' found in text, replacing with '<mask>' for processing.")
-        replaced_text = chunk_text.replace("mask", "<mask>")
-        unmasked_text = fill_mask(replaced_text)[0]["sequence"]
-        print(
-            f"Text after replacing 'mask' with '<mask>' and unmasking: {unmasked_text}"
-        )
-    else:
-        unmasked_text = chunk_text
-        print("No 'mask' or '<mask>' found in text.")
-
-    if stream is not None:
-        stream += unmasked_text
-    else:
-        stream = unmasked_text
-
-    return stream, unmasked_text
+    return stream, chunk_text
 
 
 def transcribe(inputs):

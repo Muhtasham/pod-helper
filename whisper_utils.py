@@ -92,7 +92,9 @@ def load_audio_wav_format(wav_path, debug=False):
                 waveform.T, orig_sr=sample_rate, target_sr=SAMPLE_RATE
             )
         else:
-            waveform = librosa.resample(waveform, orig_sr=sample_rate, target_sr=SAMPLE_RATE)
+            waveform = librosa.resample(
+                waveform, orig_sr=sample_rate, target_sr=SAMPLE_RATE
+            )
         end = time.time()
         print(f"Resampling took {end - now:.2f} seconds")
         sample_rate = SAMPLE_RATE
@@ -106,7 +108,6 @@ def load_audio_wav_format(wav_path, debug=False):
     assert (
         sample_rate == SAMPLE_RATE
     ), f"Only support 16k sample rate, but got {sample_rate}"
-
 
     if waveform.ndim == 2:
         print("Stereo audio detected. Converting to mono.")
@@ -213,9 +214,7 @@ def log_mel_spectrogram(
         print(f"Live audio sample rate: {sr} Hz")
         if sr != SAMPLE_RATE:
             # Resample the audio to 16 kHz if the sampling rate is not 16 kHz
-            audio = librosa.resample(
-                audio, orig_sr=sr, target_sr=SAMPLE_RATE
-            )
+            audio = librosa.resample(audio, orig_sr=sr, target_sr=SAMPLE_RATE)
             print(f"Resampled audio to {SAMPLE_RATE} Hz")
     else:
         audio = audio
