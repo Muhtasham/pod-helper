@@ -18,7 +18,8 @@ from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 from subprocess import CalledProcessError, run
-from typing import Dict, Iterable, List, Optional, TextIO, Tuple, Union
+from typing import Dict, Iterable, List, Optional, TextIO, Tuple, Union, Any
+from rich import print
 
 import kaldialign
 import numpy as np
@@ -27,7 +28,6 @@ import torch
 import torch.nn.functional as F
 import librosa
 import time
-import ffmpeg
 
 Pathlike = Union[str, Path]
 
@@ -173,7 +173,7 @@ def mel_filters(device, n_mels: int, mel_filters_dir: str = None) -> torch.Tenso
 
 
 def log_mel_spectrogram(
-    audio: Union[str, np.ndarray, torch.Tensor, Tuple[int, np.ndarray]],
+    audio: Union[str, np.ndarray, torch.Tensor],
     n_mels: int,
     padding: int = 0,
     device: Optional[Union[str, torch.device]] = None,
@@ -185,10 +185,9 @@ def log_mel_spectrogram(
 
     Parameters
     ----------
-    audio: Union[str, np.ndarray, torch.Tensor, Tuple[int, np.ndarray]]
+    audio: Union[str, np.ndarray, torch.Tensor]
         The audio input can be a path to an audio file (str), a NumPy array containing
-        the audio waveform, a PyTorch tensor, or a tuple containing the sampling rate
-        (int) and the audio waveform (np.ndarray).
+        the audio waveform, a PyTorch tensor.
 
     n_mels: int
         The number of Mel-frequency filters, only 80 and 128 are supported
@@ -199,25 +198,20 @@ def log_mel_spectrogram(
     device: Optional[Union[str, torch.device]]
         If given, the audio tensor is moved to this device before STFT
 
+    mel_filters_dir: str
+        The directory containing the mel filters
+
+    return_duration: bool
+        If True, return the combined stream and duration
+
+    return_stream: bool
+        If True, return the combined stream and new chunk
+
     Returns
     -------
     torch.Tensor, shape = (80 or 128, n_frames)
         A Tensor that contains the Mel spectrogram
     """
-
-    if isinstance(audio, tuple):
-        # Unpack the tuple to get the sampling rate and audio data
-        sr, audio = audio
-        audio = audio.astype(np.float32)
-        audio /= np.max(np.abs(audio))
-
-        print(f"Live audio sample rate: {sr} Hz")
-        if sr != SAMPLE_RATE:
-            # Resample the audio to 16 kHz if the sampling rate is not 16 kHz
-            audio = librosa.resample(audio, orig_sr=sr, target_sr=SAMPLE_RATE)
-            print(f"Resampled audio to {SAMPLE_RATE} Hz")
-    else:
-        audio = audio
 
     if not torch.is_tensor(audio):
         if isinstance(audio, str):
@@ -245,6 +239,7 @@ def log_mel_spectrogram(
     log_spec = torch.clamp(mel_spec, min=1e-10).log10()
     log_spec = torch.maximum(log_spec, log_spec.max() - 8.0)
     log_spec = (log_spec + 4.0) / 4.0
+
     if return_duration:
         return log_spec, duration
     else:

@@ -2,6 +2,10 @@
 
 ![](assets/demo.png)
 
+UPD added support for real-time ASR
+
+![](assets/real-time.png)
+
 Pod-Helper is an advanced audio processing tool that goes beyond transcribing at lightning speed. It also offers audio repair capabilities using the MLM (Masked Language Model) objective to ensure your content maintains its quality and vibe.
 
 ## Features:
@@ -49,6 +53,9 @@ Here we show to run main model behind this app [whisper model](https://github.co
 ### Run
 
 ```bash
+# Launch the Gradio interface
+python3 app.py
+
 # If the input file does not have a .wav extension, ffmpeg needs to be installed with the following command:
 # apt-get update && apt-get install -y ffmpeg
 python3 run.py --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
@@ -59,8 +66,6 @@ python3 run.py --name single_wav_test --engine_dir ./tinyrt_no_layernorm --input
 # without logger
 python3 run.py --log_level none --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
 
-# Launch the Gradio interface
-python3 app.py
 ```
 
 ### Optional: Re-Build TensorRT engine(s)
@@ -92,6 +97,15 @@ python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --us
 ```
 
 ## ToDos:
-- [ ] Port BERT model for MLM and Sentiment Analysis to TensorRT-LLM.
-- [ ] Add support for more audio formats.
-- [ ] Add support for more languages. 
+- [ ]  Port BERT model for MLM and Sentiment Analysis to TensorRT-LLM.
+- [X]  Add support for real-time Automatic Speech Recognition (ASR).
+- [ ]  Add support for more audio formats.
+- [ ]  Add support for more languages. 
+
+## Contributing
+
+Contributions to enhance and expand this project are welcome. Please see the `CONTRIBUTING.md` file for guidelines on how to contribute.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

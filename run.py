@@ -38,7 +38,7 @@ from rich.panel import Panel
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--log_level", type=str, default="none")
+    parser.add_argument("--log_level", type=str, default="info")
     parser.add_argument("--engine_dir", type=str, default="tinyrt")
     parser.add_argument("--results_dir", type=str, default="tmp")
     parser.add_argument("--assets_dir", type=str, default=None)
@@ -239,7 +239,7 @@ class WhisperTRTLLM(object):
 
 
 def decode_wav_file(
-    input_file_path,
+    input_file_path: str,
     model=WhisperTRTLLM(),
     text_prefix="<|startoftranscript|><|en|><|transcribe|><|notimestamps|>",
     dtype="float16",
@@ -248,12 +248,13 @@ def decode_wav_file(
     normalizer=None,
     mel_filters_dir=None,
     return_duration_info=True,
+    stream_mode=False,
 ):
-    start_time = time.time()
+    start_time = time.time() if not stream_mode else None
 
     mel, total_duration = log_mel_spectrogram(
-        input_file_path,
-        model.n_mels,
+        audio=input_file_path,
+        n_mels=model.n_mels,
         device="cuda",
         return_duration=True,
         mel_filters_dir=mel_filters_dir,
@@ -265,7 +266,8 @@ def decode_wav_file(
     mel = mel.repeat(batch_size, 1, 1)
     predictions = model.process_batch(mel, text_prefix, num_beams)
     prediction = predictions[0]
-    elapsed = time.time() - start_time
+
+    elapsed = (time.time() - start_time) if not stream_mode else None
 
     # rprint(f"Raw prediction: {prediction}")
 
@@ -273,36 +275,41 @@ def decode_wav_file(
     prediction = re.sub(r"<\|.*?\|>", "", prediction)
 
     # rprint(f"Processed prediction: {prediction}")
+
     if normalizer:
         prediction = normalizer(prediction)
+    
     rprint(Panel(f"{prediction}", title="Prediction", border_style="green"))
     results = [(0, [""], prediction.split())]
 
-    # RTF = Real Time Factor is the ratio of the total duration of the audio to the processing time of the audio
-    # it is a measure of how much real time it takes to process 1 second of audio
-    rtf = elapsed / total_duration
+    if not stream_mode:
+        # RTF = Real Time Factor is the ratio of the total duration of the audio to the processing time of the audio
+        # it is a measure of how much real time it takes to process 1 second of audio
+        rtf = elapsed / total_duration
 
-    # Create a table
-    table = Table(show_header=True, header_style="bold magenta")
+        # Create a table
+        table = Table(show_header=True, header_style="bold magenta")
 
-    # Add columns
-    table.add_column("Metric", width=20, no_wrap=True)
-    table.add_column("Value", style="green", justify="right", no_wrap=True)
+        # Add columns
+        table.add_column("Metric", width=20, no_wrap=True)
+        table.add_column("Value", style="green", justify="right", no_wrap=True)
 
-    # Add rows of data
-    table.add_row("RTF", f"{rtf:.4f}")
-    table.add_row("Audiofile Duration", f"{total_duration:.3f} seconds")
-    table.add_row("Processing Time", f"{elapsed:.3f} seconds")
-    table.add_row("Batch Size", str(batch_size))
-    table.add_row("Num Beams", str(num_beams))
-    table.add_row("Dtype", dtype)
+        # Add rows of data
+        table.add_row("RTF", f"{rtf:.4f}")
+        table.add_row("Audiofile Duration", f"{total_duration:.3f} seconds")
+        table.add_row("Processing Time", f"{elapsed:.3f} seconds")
+        table.add_row("Batch Size", str(batch_size))
+        table.add_row("Num Beams", str(num_beams))
+        table.add_row("Dtype", dtype)
 
-    # Print the table
-    rprint(table)
+        # Print the table
+        rprint(table)
 
     if return_duration_info:
         del model
         return results, total_duration
+    if stream_mode:
+        return prediction
     else:
         return prediction
 

@@ -1,9 +1,13 @@
 import gradio as gr
 import tensorrt_llm
 import torch
+import librosa
 import numpy as np
 from run import decode_wav_file
 from transformers import pipeline
+
+SAMPLE_RATE = 16000
+
 
 device = 0 if torch.cuda.is_available() else "cpu"
 
@@ -19,19 +23,25 @@ sentiment = pipeline(
 
 
 def transcribe_live(stream, new_chunk):
-    if new_chunk is None:
-        raise gr.Error(
-            "No audio file submitted! Please upload or record an audio file before submitting your request."
-        )
+    sr, y = new_chunk
+    y = y.astype(np.float32)
+    y /= np.max(np.abs(y))
+
+    print(f"Live audio sample rate: {sr} Hz")
+
+    if sr != SAMPLE_RATE:
+        y = librosa.resample(y, orig_sr=sr, target_sr=SAMPLE_RATE)
+        print(f"Resampled audio to {SAMPLE_RATE} Hz")
 
     if stream is not None:
-        stream = np.concatenate([stream, chunk_text])
+        stream = np.concatenate([stream, y])
     else:
-        stream = chunk_text
+        stream = y
 
     chunk_text = decode_wav_file(
-        stream,
+        input_file_path=stream,
         return_duration_info=False,
+        stream_mode=True,
     )
 
     return stream, chunk_text
@@ -115,10 +125,14 @@ if __name__ == "__main__":
             "state",
             gr.Audio(sources="microphone", streaming=True),
         ],
-        outputs=["state", gr.Textbox(label="Transcription")],
+        outputs=[
+                "state", 
+                gr.Textbox(label="Real-time Transcription")],
         live=True,
         title="Pod-Helper Transcription Service",
-        description=("Streaming ASR Demo. Demo uses the OpenAI Whisper"),
+        description=(
+            "Streaming Automatic Speech Recognition (ASR) running locally with TensorRT-LLM optimized for live transcription."
+        ),
         allow_flagging="never",
     )
 
