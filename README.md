@@ -2,16 +2,15 @@
 
 ![](assets/demo.png)
 
-UPD added support for real-time ASR
-
+See demo of real-time ASR running locally with 2.5GB of VRAM.
 ![](assets/real-time.gif)
 
 Pod-Helper is an advanced audio processing tool that goes beyond transcribing at lightning speed. It also offers audio repair capabilities using the MLM (Masked Language Model) objective to ensure your content maintains its quality and vibe.
 
 ## Features:
-- ⚡ Lightning-fast audio transcription.
-- 🛠️ Audio corruption repair.
-- ✨ Ensures your content's vibe is just right.
+- ⚡ Real-time audio transcription with TRT-LLM optimized Whisper model.
+- 🛠️ Audio corruption repair via good old Roberta.
+- ✨ Sentiment analysis to gauge the mood of the content.
 
 ## Gen AI on RTX PCs Developer Contest Entry details:
 
@@ -55,17 +54,6 @@ Here we show to run main model behind this app [whisper model](https://github.co
 ```bash
 # Launch the Gradio interface
 python3 app.py
-
-# If the input file does not have a .wav extension, ffmpeg needs to be installed with the following command:
-# apt-get update && apt-get install -y ffmpeg
-python3 run.py --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
-
-# decode a custom audio file and different engine
-python3 run.py --name single_wav_test --engine_dir ./tinyrt_no_layernorm --input_file assets/thnx_resampled_16000Hz.wav
-
-# without logger
-python3 run.py --log_level none --name single_wav_test --engine_dir ./tinyrt --input_file assets/1221-135766-0002.wav
-
 ```
 
 ### Optional: Re-Build TensorRT engine(s)
@@ -97,9 +85,9 @@ python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --us
 ```
 
 ## ToDos:
-- [ ]  Port BERT model for MLM and Sentiment Analysis to TensorRT-LLM.
 - [X]  Add support for real-time Automatic Speech Recognition (ASR).
-- [ ]  Add support for more audio formats.
+- [X]  Add support for more audio formats, install ffmpeg.
+- [ ]  Port BERT model for MLM and Sentiment Analysis to TensorRT-LLM.
 - [ ]  Add support for more languages. 
 
 ## Contributing
