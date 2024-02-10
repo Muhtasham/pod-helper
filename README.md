@@ -55,10 +55,6 @@ pip install -r requirements.txt
 Below we show to run main model behind this project [whisper model](https://github.com/openai/whisper/tree/main) in TensorRT-LLM on a single GPU, note that you can also run it on multiple GPUs but you need to rebuild the engine with the correct flags for that. See [Optional: Re-Build TensorRT engine(s)](#optional-re-build-tensorrt-engines) section for more details.
 
 ```bash
-
-### Run
-
-```bash
 # Launch the Gradio interface
 python3 app.py
 ```

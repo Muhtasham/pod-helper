@@ -11,6 +11,10 @@ SAMPLE_RATE = 16000
 
 device = 0 if torch.cuda.is_available() else "cpu"
 
+# Note the below pipelines will be migrated to TRT-LLM in the future for even faster inference
+# Waiting for https://github.com/NVIDIA/TensorRT-LLM/issues/1042 to be resolved 
+
+# For now, we are using the pipeline from HuggingFace for the demo
 fill_mask = pipeline(
     task="fill-mask",
     device=device,
