@@ -12,7 +12,7 @@ Pod-Helper is an advanced audio processing tool that goes beyond transcribing at
 - 🛠️ Audio corruption repair via good old Roberta.
 - ✨ Sentiment analysis to gauge the mood of the content.
 
-## Gen AI on RTX PCs Developer Contest Entry details:
+## Gen AI on RTX PCs Developer Contest Entry details
 
 This project is a submission for the NVIDIA RTX PCs Developer Contest, under the General Generative AI Projects category. Pod-Helper showcases the potential of generative AI in transforming audio content creation and processing.
 
@@ -33,9 +33,35 @@ Category: [General Generative AI Projects category](https://www.nvidia.com/en-us
 
 ## How to use:
 
+### Installation
+
+```bash
+# Clone the repository
+git clone
+cd pod-helper
+```
+
 ### Prerequisites
 
-- Install TensorRT-LLM for Windows from [tensorrt-llm-windows](https://github.com/NVIDIA/TensorRT-LLM/tree/rel/windows).
+- Install TensorRT-LLM for Windows from [tensorrt-llm-windows](https://github.com/NVIDIA/TensorRT-LLM/tree/rel/windows), after that.
+
+```bash
+# Install requirements
+pip install -r requirements.txt
+```
+
+### Usage
+
+Below we show to run main model behind this project [whisper model](https://github.com/openai/whisper/tree/main) in TensorRT-LLM on a single GPU, note that you can also run it on multiple GPUs but you need to rebuild the engine with the correct flags for that. See [Optional: Re-Build TensorRT engine(s)](#optional-re-build-tensorrt-engines) section for more details.
+
+```bash
+
+### Run
+
+```bash
+# Launch the Gradio interface
+python3 app.py
+```
 
 ### Overview
 
@@ -45,18 +71,10 @@ Key components include:
 - [`run.py`](./run.py): Performs inference on WAV file(s) using the built TensorRT engines.
 - [`app.py`](./app.py): Provides a Gradio interface for microphone input or file upload, utilizing `run.py` modules.
 
-### Usage
+## <a id="optional-re-build-tensorrt-engines"></a>Optional: Re-Build TensorRT engine(s)
 
-Here we show to run main model behind this app [whisper model](https://github.com/openai/whisper/tree/main) in TensorRT-LLM on a single GPU.
-
-### Run
-
-```bash
-# Launch the Gradio interface
-python3 app.py
-```
-
-### Optional: Re-Build TensorRT engine(s)
+<details>
+<summary>Click to expand</summary>
 
 You can either use the pre-converted models located in the [`tinyrt`](https://github.com/Muhtasham/pod-helper/tree/master/tinyrt) folder or download the Whisper checkpoint models from [here](https://github.com/openai/whisper/blob/main/whisper/__init__.py#L27-L28).
 
@@ -83,12 +101,13 @@ python3 build.py --output_dir tinyrt_no_layernorm --use_gpt_attention_plugin --u
 # Build the tiny model using a single GPU with quantization
 python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --use_gemm_plugin --use_bert_attention_plugin --use_weight_only
 ```
+</details>
 
 ## ToDos:
 - [X]  Add support for real-time Automatic Speech Recognition (ASR).
 - [X]  Add support for more audio formats, install ffmpeg.
-- [ ]  Port BERT model for MLM and Sentiment Analysis to TensorRT-LLM.
-- [ ]  Add support for more languages. 
+- [ ]  Port BERT model for MLM and Sentiment Analysis to TensorRT-LLM, to support real-time audio repair and sentiment analysis. 
+- [ ]  Add support for more languages.
 
 ## Contributing
 
