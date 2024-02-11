@@ -2,7 +2,7 @@
 
 ![](assets/demo.png)
 
-See demo of real-time ASR running locally with 2.5GB of VRAM.
+See demo of real-time ASR running locally with 2.5GB of VRAM, or [click here](https://www.loom.com/share/db0338dc36e6434d9d924875d07296a1) to watch on video.
 ![](assets/real-time.gif)
 
 Pod-Helper is an advanced audio processing tool that goes beyond transcribing at lightning speed. It also offers audio repair capabilities using the MLM (Masked Language Model) objective to ensure your content maintains its quality and vibe.
@@ -11,25 +11,6 @@ Pod-Helper is an advanced audio processing tool that goes beyond transcribing at
 - ⚡ Real-time audio transcription with TRT-LLM optimized Whisper model.
 - 🛠️ Audio corruption repair via good old Roberta.
 - ✨ Sentiment analysis to gauge the mood of the content.
-
-## Gen AI on RTX PCs Developer Contest Entry details
-
-This project is a submission for the NVIDIA RTX PCs Developer Contest, under the General Generative AI Projects category. Pod-Helper showcases the potential of generative AI in transforming audio content creation and processing.
-
-Category: [General Generative AI Projects category](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest)
-
-**Tested on following system:**
-- Operating System: Windows 10
-  - Version: 22H2 
-  - OS Build: 19045.3930
-- TensorRT-LLM version: 0.7.1
-  - CUDA version: 12.4
-  - cuDNN version: 8.9.7.29 
-  - GPU: NVIDIA RTX A1000
-  - Driver version: 551.23
-  - DataType: FP16
-  - Python version: 3.10.11
-  - PyTorch version: 2.1.0+cu121
 
 ## How to use:
 
@@ -98,6 +79,25 @@ python3 build.py --output_dir tinyrt_no_layernorm --use_gpt_attention_plugin --u
 python3 build.py --output_dir tinyrt_weight_only --use_gpt_attention_plugin --use_gemm_plugin --use_bert_attention_plugin --use_weight_only
 ```
 </details>
+
+## Gen AI on RTX PCs Developer Contest Entry details
+
+This project is a submission for the NVIDIA RTX PCs Developer Contest, under the General Generative AI Projects category. Pod-Helper showcases the potential of generative AI in transforming audio content creation and processing.
+
+Category: [General Generative AI Projects category](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest)
+
+**Tested on following system:**
+- Operating System: Windows 10
+  - Version: 22H2 
+  - OS Build: 19045.3930
+- TensorRT-LLM version: 0.7.1
+  - CUDA version: 12.4
+  - cuDNN version: 8.9.7.29 
+  - GPU: NVIDIA RTX A1000
+  - Driver version: 551.23
+  - DataType: FP16
+  - Python version: 3.10.11
+  - PyTorch version: 2.1.0+cu121
 
 ## ToDos:
 - [X]  Add support for real-time Automatic Speech Recognition (ASR).
