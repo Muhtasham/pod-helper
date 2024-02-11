@@ -2,7 +2,7 @@
 
 ![](assets/demo.png)
 
-See demo of real-time ASR running locally with 2.5GB of VRAM, or [click here](https://www.loom.com/share/db0338dc36e6434d9d924875d07296a1) to watch on video.
+See demo of real-time ASR running locally with 2.5GB of VRAM, or [click here](https://www.loom.com/share/db0338dc36e6434d9d924875d07296a1) to watch the video.
 ![](assets/real-time.gif)
 
 Pod-Helper is an advanced audio processing tool that goes beyond transcribing at lightning speed. It also offers audio repair capabilities using the MLM (Masked Language Model) objective to ensure your content maintains its quality and vibe.
