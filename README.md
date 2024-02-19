@@ -99,7 +99,7 @@ Category: [General Generative AI Projects category](https://www.nvidia.com/en-us
   - Python version: 3.10.11
   - PyTorch version: 2.1.0+cu121
 
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Great to see the entries coming in for our <a href="https://twitter.com/hashtag/DevContest?src=hash&amp;ref_src=twsrc%5Etfw">#DevContest</a>. <br>Thank you <a href="https://twitter.com/Muhtasham9?ref_src=twsrc%5Etfw">@Muhtasham9</a> for this cool demo. <a href="https://t.co/6uvKC5NXwO">https://t.co/6uvKC5NXwO</a></p>&mdash; NVIDIA AI Developer (@NVIDIAAIDev) <a href="https://twitter.com/NVIDIAAIDev/status/1755991455716589971?ref_src=twsrc%5Etfw">February 9, 2024</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Great to see the entries coming in for our <a href="https://twitter.com/hashtag/DevContest?src=hash&amp;ref_src=twsrc%5Etfw">#DevContest</a>. <br>Thank you <a href="https://twitter.com/Muhtasham9?ref_src=twsrc%5Etfw">@Muhtasham9</a> for this cool demo. <a href="https://t.co/6uvKC5NXwO">https://t.co/6uvKC5NXwO</a></p>&mdash; NVIDIA AI Developer (@NVIDIAAIDev) <a href="https://twitter.com/NVIDIAAIDev/status/1755991455716589971?ref_src=twsrc%5Etfw">February 9, 2024</a></blockquote>
 
 ## ToDos:
 - [X]  Add support for real-time Automatic Speech Recognition (ASR).
