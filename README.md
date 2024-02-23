@@ -9,9 +9,9 @@ Pod-Helper is an advanced audio processing tool that goes beyond transcribing at
 - 🛠️ Audio corruption repair via good old Roberta.
 - ✨ Sentiment analysis to gauge the mood of the content.
 
-See demo of real-time ASR running **locally** on consumer hardware with only **2.5GB** of VRAM, or [click here](https://www.loom.com/share/db0338dc36e6434d9d924875d07296a1) to watch the video.
+See demo of real-time ASR running **locally** on consumer hardware with only **2.5GB** of VRAM
 
-![](assets/real-time.gif)
+<iframe width="500" height="400" src="https://www.loom.com/embed/db0338dc36e6434d9d924875d07296a1?sid=728c62cd-2be1-4642-a36b-4dd4933f1243" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
 ## How to use:
 
