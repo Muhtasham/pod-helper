@@ -9,9 +9,9 @@ Pod-Helper is an advanced audio processing tool that goes beyond transcribing at
 - 🛠️ Audio corruption repair via good old Roberta.
 - ✨ Sentiment analysis to gauge the mood of the content.
 
-See demo of real-time ASR running **locally** on consumer hardware with only **2.5GB** of VRAM
+See demo of real-time ASR running **locally** on consumer hardware with only **2.5GB** of VRAM, or [click here](https://www.loom.com/share/db0338dc36e6434d9d924875d07296a1) to watch the video.
 
-<iframe width="500" height="400" src="https://www.loom.com/embed/db0338dc36e6434d9d924875d07296a1?sid=728c62cd-2be1-4642-a36b-4dd4933f1243" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+![](assets/real-time.gif)
 
 ## How to use:
 
@@ -102,6 +102,7 @@ Category: [General Generative AI Projects category](https://www.nvidia.com/en-us
   - Python version: 3.10.11
   - PyTorch version: 2.1.0+cu121
 
+Confirmation of entry:
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Great to see the entries coming in for our <a href="https://twitter.com/hashtag/DevContest?src=hash&amp;ref_src=twsrc%5Etfw">#DevContest</a>. <br>Thank you <a href="https://twitter.com/Muhtasham9?ref_src=twsrc%5Etfw">@Muhtasham9</a> for this cool demo. <a href="https://t.co/6uvKC5NXwO">https://t.co/6uvKC5NXwO</a></p>&mdash; NVIDIA AI Developer (@NVIDIAAIDev) <a href="https://twitter.com/NVIDIAAIDev/status/1755991455716589971?ref_src=twsrc%5Etfw">February 9, 2024</a></blockquote>
 
 ## ToDos:
