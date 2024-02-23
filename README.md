@@ -87,6 +87,7 @@ This project is a submission for the NVIDIA RTX PCs Developer Contest, under the
 
 Category: [General Generative AI Projects category](https://www.nvidia.com/en-us/ai-data-science/generative-ai/rtx-developer-contest)
 
+![](assets/arch.png)
 
 **Tested on following system:**
 - Operating System: *Windows 10*
